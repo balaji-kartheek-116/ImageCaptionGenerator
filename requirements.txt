@@ -8,5 +8,5 @@ gtts
 pyttsx3
 pygame
 streamlit
-numpy==1.21.1
+numpy==1.24.4
 opencv-python==4.5.4.58
