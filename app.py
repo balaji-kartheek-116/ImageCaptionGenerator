@@ -5,9 +5,11 @@ from PIL import Image
 import torch.nn.functional as F
 import fitz
 import os
+from gtts import gTTS  # Import Google Text-to-Speech library
 
 # Suppress warnings
 import warnings
+
 warnings.filterwarnings("ignore", message=".*Your .* pad_token_id .*")
 
 # Load the pre-trained model and tokenizer
@@ -23,6 +25,7 @@ max_length = 16
 num_beams = 4
 gen_kwargs = {"max_length": max_length, "num_beams": num_beams}
 
+
 # Function to predict caption from image
 def predict_caption(image_paths):
     images = []
@@ -35,7 +38,8 @@ def predict_caption(image_paths):
     pixel_values = feature_extractor(images=images, return_tensors="pt").pixel_values
     pixel_values = pixel_values.to(device)
 
-    attention_mask = F.pad(torch.ones(pixel_values.shape[:-1], dtype=torch.long, device=pixel_values.device), (0, pixel_values.shape[1] - 1), value=0)
+    attention_mask = F.pad(torch.ones(pixel_values.shape[:-1], dtype=torch.long, device=pixel_values.device),
+                           (0, pixel_values.shape[1] - 1), value=0)
 
     output_ids = model.generate(pixel_values, attention_mask=attention_mask, **gen_kwargs)
 
@@ -43,9 +47,11 @@ def predict_caption(image_paths):
     preds = [pred.strip() for pred in preds]
     return preds
 
+
 # Streamlit app
 def main():
     st.title("PDF Image Captioning")
+    st.image("img.png")
 
     uploaded_file = st.file_uploader("Upload a PDF file", type="pdf")
 
@@ -93,17 +99,26 @@ def main():
                 # Display extracted text and image captions in desired format
                 lines = final_text.split('\n')
                 iter_lines = iter(lines)
+                output_text = ""
                 for line in iter_lines:
                     st.write(line)
+                    output_text += line + "\n"
                     if captions:
                         caption = captions.pop(0)
                         if caption:
                             st.write(f"{caption}")
+                            output_text += caption + "\n"
                             try:
                                 next_line = next(iter_lines)
                                 st.write(next_line)
+                                output_text += next_line + "\n"
                             except StopIteration:
                                 pass
+
+                # Convert text to voice using gTTS
+                tts = gTTS(text=output_text, lang='en')
+                tts.save('output_audio.mp3')
+                st.audio('output_audio.mp3', format='audio/mp3')
 
 if __name__ == "__main__":
     main()
