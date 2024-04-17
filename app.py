@@ -118,7 +118,11 @@ def main():
                 # Convert text to voice using gTTS
                 tts = gTTS(text=output_text, lang='en')
                 tts.save('output_audio.mp3')
-                st.audio('output_audio.mp3', format='audio/mp3', autoplay=True)  # Autoplay added
+                
+                # Display the audio using a custom HTML audio tag with autoplay
+                audio_html = f'<audio src="output_audio.mp3" controls autoplay></audio>'
+                st.markdown(audio_html, unsafe_allow_html=True)
+
 
 if __name__ == "__main__":
     main()
