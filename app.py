@@ -13,7 +13,7 @@ import warnings
 warnings.filterwarnings("ignore", message=".*Your .* pad_token_id .*")
 
 # Load the pre-trained model and tokenizer
-model = VisionEncoderDecoderModel.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
+model = VisionEncoderDecolerModel.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
 feature_extractor = ViTImageProcessor.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
 tokenizer = AutoTokenizer.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
 
@@ -122,5 +122,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
