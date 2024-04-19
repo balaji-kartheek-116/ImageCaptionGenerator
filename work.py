@@ -93,7 +93,7 @@ def autoplay_audio(file_path: str):
 # Streamlit app
 def main():
     st.title("PDF Image Captioning")
-
+    st.image("img.png")
     uploaded_file = st.file_uploader("Upload a PDF file", type="pdf")
 
     if uploaded_file is not None:
