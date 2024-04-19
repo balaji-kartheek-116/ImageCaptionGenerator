@@ -10,3 +10,4 @@ pygame
 streamlit
 opencv-python
 numpy
+pdfplumber
